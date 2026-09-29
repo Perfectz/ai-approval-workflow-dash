@@ -19,7 +19,7 @@ class McpIntegrationTests(unittest.IsolatedAsyncioTestCase):
                 async with ClientSession(read, write) as session:
                     await session.initialize()
                     tools = await session.list_tools()
-                    self.assertEqual(len(tools.tools), 14)
+                    self.assertEqual(len(tools.tools), 18)
                     self.assertFalse(any("approve" in tool.name for tool in tools.tools))
 
                     async def call(name, arguments):

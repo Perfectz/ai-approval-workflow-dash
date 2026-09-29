@@ -1,0 +1,4 @@
+interface:
+  display_name: "Flow Sprite Studio"
+  short_description: "Approved game sprites through Google Flow browser control"
+  default_prompt: "Use $flow-sprite-studio to advance my sprite project through its next approved stage."

@@ -47,7 +47,8 @@ For another machine, change the paths. A compatible Python environment must cont
 | --- | --- |
 | `list_projects` | Project IDs, stages and review counts |
 | `get_project` | Direction, scenes, versions, reviews, timeline and work status |
-| `get_workflow` | Pinned stage definitions and checks |
+| `get_workflow` | Project's stage definitions and checks; pass `project_id` or `workflow_id` for sprite mode |
+| `list_workflows` | Available film and game-sprite workflow modes |
 | `get_next_action` | Permitted stage, instructions, approved inputs and feedback |
 | `claim_task` | Exclusive 15-minute task lease |
 | `heartbeat` | Renew a still-valid lease |
@@ -57,10 +58,13 @@ For another machine, change the paths. A compatible Python environment must cont
 | `submit_for_review` | Put a claimed version into the director's queue |
 | `finish_task` | Complete a submitted handoff, or explicitly release the task |
 | `save_scene` | Plan/revise package direction after the comic gate |
-| `prepare_generation` | Export approved Wan prompt/reference request package |
+| `prepare_generation` | Export an approved Wan package or Google Flow browser task for the selected mode |
+| `reserve_flow_attempt` | Reserve one reviewed Flow generation/credit allowance locally; no external request |
+| `record_flow_result` | Record observed browser status/evidence; reconcile an existing attempt without a retry |
+| `extract_sprites` | Pack an approved downloaded clip locally and register sheet/atlas/preview/QC |
 | `export_project` | Portable ZIP of records and source files |
 
-There is no approve, spend, upload-to-cloud or submit-to-Wan tool in v1.
+There is no approve, provider API submission, automatic cloud upload or Generate-button tool. Google Flow execution uses an agent's supported browser/computer-control capabilities under the exact approved task; read the [sprite workflow](SPRITE_WORKFLOW.md). Reservations and result receipts are local coordination records.
 
 ## Example handoff
 

@@ -1,0 +1,87 @@
+{
+  "id": "sprite-to-flow",
+  "version": 1,
+  "title": "Game sprites via Google Flow",
+  "mode": "sprite",
+  "clip_seconds": 8,
+  "fps": 12,
+  "provider": "Google Flow",
+  "model": "Gemini Omni Flash 1.1",
+  "execution": "browser",
+  "supported_clip_seconds": [4, 6, 8, 10],
+  "source_fps": "Measure the downloaded original; sprite playback fps is separate.",
+  "stages": [
+    {
+      "id": "sprite_brief",
+      "name": "Asset brief",
+      "kind": "sprite_brief",
+      "scope": "project",
+      "deliverable": "Game asset purpose, art style, dimensions, camera, directions, required actions, engine target and credit allowance.",
+      "checks": ["Stable asset IDs and intended game use", "Explicit cell size, anchor, camera and style", "Required action/direction coverage and delivery formats"],
+      "instruction": "Agree the asset contract before making references. Specify the target sprite playback rate independently from the Flow video duration and source frame rate. Human review approves this exact brief."
+    },
+    {
+      "id": "sprite_design",
+      "name": "Design & references",
+      "kind": "sprite_design",
+      "scope": "project",
+      "deliverable": "Approved character or object design, palette, scale sample, clean reference views and labeled identity sheet.",
+      "checks": ["Readable at intended game size", "Consistent silhouette, palette and proportions", "Clean model inputs separated from labeled review sheets"],
+      "instruction": "Calibrate one design at actual display scale. Keep stable asset IDs, orientation and proportions. Label review references and retain clean separate images for Flow. Request director approval before motion planning."
+    },
+    {
+      "id": "sprite_motion",
+      "name": "Motion & coverage",
+      "kind": "sprite_motion",
+      "scope": "project",
+      "deliverable": "Action/direction matrix, animation entries, timing beats, loop policy, contact events and extraction plan.",
+      "checks": ["Each action/direction has an animation entry", "Camera and translation policy locked", "Flow duration and sprite cycle distinguished"],
+      "instruction": "Plan one controlled action and direction per animation entry. Use scene records for animation entries. Choose a currently supported Flow length; define the usable cycle, output fps, frame count, anchor and foot-contact events separately. Avoid multiplying generations until a representative action is approved."
+    },
+    {
+      "id": "sprite_boards",
+      "name": "Action boards",
+      "kind": "sprite_board",
+      "scope": "scene",
+      "deliverable": "Labeled key poses and motion beats, clean start/end or ingredient references, exact Flow prompt and ordered reference map.",
+      "checks": ["Asset, action, direction and key poses identified", "Fixed framing, baseline and full-body visibility", "Prompt agrees with exact reference versions"],
+      "instruction": "Use the approved design and coverage plan. Show anticipation, contact, recovery and loop seam when relevant. Keep labels off model inputs. Record metadata.reference_map, ordered metadata.flow_references with clean image file indices, and metadata.flow_allowance with explicit upload permission, output count, generation limit and credit limit. Submit the exact prompt, references and allowance for human approval before preparing the browser generation task."
+    },
+    {
+      "id": "sprite_flow",
+      "name": "Flow clip",
+      "kind": "sprite_video",
+      "scope": "scene",
+      "deliverable": "Original downloaded Google Flow clip, actual UI model/settings, prompt, ordered references, attempt record and credit evidence.",
+      "checks": ["Google Flow browser execution recorded", "Actual model, duration, output count and credit allowance captured", "Full clip checked for identity, camera, framing and action"],
+      "instruction": "Use prepare_generation to create a browser task, never a video-generation API request. Inspect the actual Flow UI, verify Gemini Omni availability and current credit cost, then reserve_flow_attempt immediately before clicking Generate. Only generate inside the exact approved board's upload, output, attempt and credit allowance. Log observed status with record_flow_result, download the original and preserve each take. A failed or pending request does not authorize another click. Register metadata.flow and submit the take for human review."
+    },
+    {
+      "id": "sprite_sheet",
+      "name": "Transparent sheet",
+      "kind": "sprite_sheet",
+      "scope": "scene",
+      "deliverable": "Transparent PNG frames and atlas, extraction manifest, labeled contact sheet and looping preview from an approved usable clip range.",
+      "checks": ["Alpha, fixed cell size and common anchor", "Measured sample times and consistent scale", "Loop seam, silhouette and edge cleanup reviewed"],
+      "instruction": "Extract an explicit usable range from the approved clip. Preserve original media and process into a new folder. Apply consistent crop and scale, approved background removal and optional nearest-neighbor sampling. Inspect alpha edges, baseline drift, contact timing and the loop seam before human approval. Flow footage is a source for sprite processing, not a guarantee of clean pixel art."
+    },
+    {
+      "id": "sprite_engine",
+      "name": "Engine preview",
+      "kind": "sprite_preview",
+      "scope": "scene",
+      "deliverable": "Playable animation preview with the approved atlas, playback rate, anchor, contact events and representative game backgrounds.",
+      "checks": ["Actual-size playback and readable silhouette", "Loop or one-shot behavior correct", "Anchor, timing and neighboring action transitions"],
+      "instruction": "Preview the approved sheet at game size on light and dark backgrounds and in the target engine when available. Keep source and playback fps separate. Record whether the preview is generic or verified in the named engine. Ask for human approval of game-ready behavior."
+    },
+    {
+      "id": "sprite_delivery",
+      "name": "Asset delivery",
+      "kind": "sprite_delivery",
+      "scope": "project",
+      "deliverable": "Approved action/direction atlas set, transparent frames, engine manifests, previews and portable provenance archive.",
+      "checks": ["Approved coverage complete", "Names, pivots, timings and formats documented", "Prompts, reference versions, source clips and licenses preserved"],
+      "instruction": "Deliver the complete approved action/direction matrix. Include atlas and frame PNGs, timing and pivot metadata, preview files, source provenance and engine import notes. Use export_project for the review and version archive. Preserve original takes and never count a technical export as director approval."
+    }
+  ]
+}

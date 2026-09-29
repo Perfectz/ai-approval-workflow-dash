@@ -2,6 +2,10 @@
 
 This repository contains a local film-production dashboard and a reusable agent workflow. It also retains the standalone scratch-audio tool and its technical demo.
 
+## Work on game sprites
+
+Read `.agents/skills/flow-sprite-studio/SKILL.md` and `docs/SPRITE_WORKFLOW.md`. Query the selected project's workflow (`get_workflow` with `project_id`); sprite scenes represent action/direction animation entries. Use Google Flow's visible browser UI and the approved Omni model, never a video generation API. Reserve the exact approved credit/attempt allowance locally immediately before Generate, and reconcile uncertain results instead of silently retrying. Preserve original downloads, clean reference versions, exact prompts, settings and UI evidence. Only extract sprites from a current approved clip; local QC never approves art.
+
 ## Work on a film
 
 Read `.agents/skills/director-studio/SKILL.md` and use the shared CLI/MCP tools in `docs/AGENT_INTERFACE.md`. Query project state before producing a deliverable. Use exact artifact versions, source pins and task leases. The dashboard is where the director reviews prompts and outputs together. Never record an approval merely because a tool ran successfully. The imported audio lab is a sandbox, not an approved creative project.
@@ -12,7 +16,7 @@ Application maintenance does not need film-stage approval. Preserve user data in
 
 - Shared business rules: `studio/store.py`; agent surface: `studio/agent_tools.py`.
 - HTTP/UI: `studio/app.py`, `src/main.tsx`, `src/styles.css`.
-- Workflow contract: `workflows/comic-to-wan-v1.json`, `docs/WORKFLOW_SPEC.md`.
+- Workflow contracts: `workflows/comic-to-wan-v1.json`, `workflows/sprite-to-flow-v1.json`, `docs/WORKFLOW_SPEC.md`, `docs/SPRITE_WORKFLOW.md`.
 - Start: `START_STUDIO.ps1`; app at `http://127.0.0.1:8767`.
 - Build: `npm run build`.
 - Relevant tests: `.venv/Scripts/python.exe -m unittest discover -s tests -v`.

@@ -16,7 +16,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from .bootstrap import seed
 from .media import inspect_media
-from .store import Store, Problem, ROOT, WORKFLOW, encode, direction_hash
+from .store import Store, Problem, ROOT, WORKFLOW, WORKFLOWS, workflow_for, encode, direction_hash
 
 store = Store()
 DIRECTOR_TOKEN = secrets.token_urlsafe(32)
@@ -29,7 +29,7 @@ async def lifespan(app):
         seed(store)
     # An interrupted local synthesis is safe to repeat explicitly. Never infer a remote job failed.
     with store.db(True) as db:
-        db.execute("UPDATE jobs SET status='interrupted' WHERE kind='scratch_audio' AND status IN ('queued','running')")
+        db.execute("UPDATE jobs SET status='interrupted' WHERE kind IN ('scratch_audio','sprite_pack') AND status IN ('queued','running')")
     yield
 
 
@@ -63,7 +63,7 @@ async def local_boundary(request: Request, call_next):
 
 @app.get("/api/session")
 def session():
-    return {"token": DIRECTOR_TOKEN, "workflow": WORKFLOW, "local_only": True, "version": "0.1.0", "provider": {"name": "Alibaba Cloud Model Studio", "model": "wan3.0-video", "mode": "package_export", "paid_submission_enabled": False}}
+    return {"token": DIRECTOR_TOKEN, "workflow": WORKFLOW, "workflows": list(WORKFLOWS.values()), "local_only": True, "version": "0.2.0", "provider": {"name": "Alibaba Cloud Model Studio", "model": "wan3.0-video", "mode": "package_export", "paid_submission_enabled": False}, "sprite_provider": {"name": "Google Flow", "model": "Gemini Omni Flash 1.1", "mode": "browser_ui", "api_enabled": False}}
 
 
 @app.get("/api/projects")
@@ -214,6 +214,8 @@ def run_audio(job, project, scene_id, source, inputs, revision, direction):
 
 @app.post("/api/projects/{project}/audio")
 def audio(project: str, payload: dict):
+    if workflow_for(store.project(project))["id"] == "sprite-to-flow":
+        raise Problem("Scratch dialogue belongs to a film project; use sprite extraction for this mode.")
     source = payload.get("source")
     if not isinstance(source, dict) or len(encode(source)) > 50000:
         raise Problem("Provide a scratch audio source under 50 KB.")
@@ -237,9 +239,38 @@ def audio(project: str, payload: dict):
     return {"job_id": job, "status": "queued"}
 
 
+def run_sprite_pack(job, project, scene_id, source_version_id, settings):
+    store.update_job(job, "running", {"message": "Extracting and packing the approved source clip locally"})
+    try:
+        result = store.pack_sprite_artifact(project, scene_id, source_version_id, settings, output=store.root / "work" / job)
+        store.update_job(job, "completed" if result["qc"]["passed"] else "needs_changes", result)
+    except Exception as error:
+        store.update_job(job, "failed", {"message": str(error)[:2000], "outputs_preserved": True})
+
+
+@app.post("/api/projects/{project}/sprites")
+def sprites(project: str, payload: dict):
+    p = store.project(project)
+    if workflow_for(p)["id"] != "sprite-to-flow":
+        raise Problem("Choose a sprite project.")
+    scene_id, source_id = payload.get("scene_id"), payload.get("source_version_id")
+    action = store.next_action(project, scene_id)
+    source = store.get_version(source_id)
+    if action["stage"] != "sprite_sheet" or action["state"] != "ready" or source_id not in action["inputs"] or source["project_id"] != project:
+        raise Problem("Choose a current approved Flow source clip at the sprite-sheet stage.", 409)
+    if not isinstance(payload.get("settings", {}), dict) or len(encode(payload.get("settings", {}))) > 10000:
+        raise Problem("Provide a small sprite settings object.")
+    with store.db() as db:
+        if db.execute("SELECT 1 FROM jobs WHERE project_id=? AND scene_id=? AND kind='sprite_pack' AND status IN ('queued','running')", (project, scene_id)).fetchone():
+            raise Problem("Sprite extraction is already running for this animation.", 409)
+    job = store.create_job(project, "sprite_pack", scene_id)
+    threading.Thread(target=run_sprite_pack, args=(job, project, scene_id, source_id, payload.get("settings", {})), daemon=True).start()
+    return {"job_id": job, "status": "queued"}
+
+
 @app.get("/api/docs/{name}")
 def document(name: str):
-    files = {"spec": ROOT / "docs/WORKFLOW_SPEC.md", "agents": ROOT / "docs/AGENT_INTERFACE.md", "wan": ROOT / "docs/WAN_AND_AUDIO.md"}
+    files = {"spec": ROOT / "docs/WORKFLOW_SPEC.md", "agents": ROOT / "docs/AGENT_INTERFACE.md", "wan": ROOT / "docs/WAN_AND_AUDIO.md", "sprites": ROOT / "docs/SPRITE_WORKFLOW.md"}
     if name not in files or not files[name].exists():
         raise Problem("Document not found.", 404)
     return {"content": files[name].read_text(encoding="utf-8")}

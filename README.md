@@ -2,7 +2,9 @@
 
 Director Studio is a local AI video-production dashboard with versioned artifacts, prompts beside previews, human approval gates, scene direction, scratch audio, a rough-cut timeline, and a reusable CLI/MCP agent interface.
 
-The workflow connects premise, a 10-page comic, screenplay, measured temporary audio, storyboards, Blender previews, Wan generation packages, take review, and final editing. Each creative handoff preserves exact versions and waits for the director's approval.
+Choose **Film** or **Game sprites** when creating a project. Both modes preserve exact artifact versions, show prompts beside outputs, and wait for human approval between stages.
+
+The film workflow connects premise, a 10-page comic, screenplay, measured temporary audio, storyboards, Blender previews, Wan generation packages, take review, and final editing. The game-sprite workflow connects asset brief, visual design, action/direction plan, clean references and motion boards, Google Flow clips, transparent sheets, playable sprite previews, and delivery.
 
 ![AI Director Studio workflow from idea to finished film](docs/design/director-studio-workflow.png)
 
@@ -29,11 +31,26 @@ The **Temporary audio lab** imports the technical timing test if it has been gen
 - Exact-version approvals, requested changes, timecoded/page feedback and stale dependency tracking.
 - Local scratch dialogue generation, isolated stems, measured waveform/cues and review jobs.
 - Take selection, in/out ranges, ordered browser rough-cut playback, JSON and full project ZIP exports.
-- Fourteen shared CLI/MCP tools for different agents, with task claims and gated handoffs.
+- Eighteen shared CLI/MCP tools for different agents, with task claims and gated handoffs.
+- Game-sprite projects with animation coverage planning, exact Google Flow browser tasks, credit/attempt reservations, generation evidence, downloaded takes, atlas previews, and local video-to-sprite packing.
+
+### Game sprites through Google Flow
+
+Create a **Game sprites** project and open its **Sprite Lab**. Approve the design and action plan, then review the exact Flow prompt, clean reference images and generation allowance together. An agent with browser/computer-control tools works in the visible Google Flow UI using Gemini Omni, downloads the original clip, and registers its receipt for review. This mode uses no video-generation API.
+
+After the clip is approved, extract an exact interval into transparent fixed-cell PNG frames, a sprite atlas, pivot/timing JSON and an animation preview. The local processor uses one shared scale and anchor; its QC preserves warnings for human review. The project export includes an engine-usable `sprites/<animation>/<version>/` bundle alongside the full provenance archive.
+
+![Sprite review with prompts, references and approvals](docs/design/sprite-studio-preview.png)
+
+The preview uses a locally drawn technical test actor. It demonstrates the dashboard and extraction controls; it is not a Google-generated production asset.
+
+Read the [sprite workflow and Google Flow browser procedure](docs/SPRITE_WORKFLOW.md) and [reusable Flow Sprite Studio skill](.agents/skills/flow-sprite-studio/SKILL.md). Local packing requires Pillow, `ffmpeg` and `ffprobe`; Flow requires an authenticated user session, available Omni controls and an explicit generation allowance. Current source clip choices are 4, 6, 8 or 10 seconds; sprite playback FPS is a separate setting.
+
+When updating an existing checkout, stop its server, run `.venv\Scripts\python.exe -m pip install -r requirements-lock.txt`, then restart with `START_STUDIO.ps1 -Rebuild` to refresh dependencies and the dashboard.
 
 ### Production connections
 
-The studio currently **prepares Wan request packages** and **accepts Blender previews and `.blend` files**. It does not yet upload references, send paid Wan requests, animate Blender scenes automatically, or render a mastered final cut. Agents use their available creation tools, then register results here. No API credentials or paid generation were used for this build.
+The film mode currently **prepares Wan request packages** and **accepts Blender previews and `.blend` files**. It does not yet upload Wan references, send paid Wan requests, animate Blender scenes automatically, or render a mastered final cut. The sprite mode prepares browser tasks and records Google Flow work performed by the user or an agent; it makes no provider API calls. Agents use their available creation and computer-control tools, then register results here. No provider credentials or paid generations were used to validate this build.
 
 Read the [workflow specification](docs/WORKFLOW_SPEC.md), [agent interface and MCP configuration](docs/AGENT_INTERFACE.md), and [reusable agent skill](.agents/skills/director-studio/SKILL.md). [Validation](docs/VALIDATION.md) records the checked behavior and remaining limits.
 

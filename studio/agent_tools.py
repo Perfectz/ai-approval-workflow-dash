@@ -1,6 +1,6 @@
 """The shared, model-independent agent interface. No director approval tool."""
 from pathlib import Path
-from .store import Store, WORKFLOW, Problem
+from .store import Store, WORKFLOW, WORKFLOWS, workflow_for, Problem
 from .media import inspect_media
 
 
@@ -9,7 +9,7 @@ def database():
 
 
 def list_projects() -> list[dict]:
-    """List films and their current progress. Never infer approval from a title."""
+    """List film and sprite projects. Never infer approval from a title."""
     return database().list_projects()
 
 
@@ -86,14 +86,25 @@ def save_scene(project_id: str, payload: dict, scene_id: str | None = None) -> d
     """
     store = database()
     action = store.next_action(project_id, scene_id)
-    if action["stage"] in ("premise", "comic"):
-        raise Problem("Approve the comic before planning video scene packages.", 409)
+    if action["stage"] in ("premise", "comic", "sprite_brief", "sprite_design"):
+        raise Problem("Approve visual design before planning film packages or sprite animations.", 409)
     return {"scene_id": store.save_scene(project_id, payload, scene_id)}
 
 
-def get_workflow() -> dict:
-    """Read the pinned eight-stage workflow and production constraints."""
+def get_workflow(project_id: str | None = None, workflow_id: str | None = None) -> dict:
+    """Read a project's film or game-sprite workflow. No args retains the film default."""
+    if project_id:
+        return workflow_for(database().project(project_id))
+    if workflow_id:
+        if workflow_id not in WORKFLOWS:
+            raise Problem("Workflow not found.", 404)
+        return WORKFLOWS[workflow_id]
     return WORKFLOW
+
+
+def list_workflows() -> list[dict]:
+    """List available workflow modes before choosing a project."""
+    return list(WORKFLOWS.values())
 
 
 def get_artifact(version_id: str) -> dict:
@@ -118,4 +129,19 @@ def export_project(project_id: str) -> dict:
     return {"path": str(database().export_project(project_id))}
 
 
-TOOLS = {fn.__name__: fn for fn in (list_projects, get_project, get_next_action, claim_task, heartbeat, register_artifact, validate_artifact, submit_for_review, finish_task, save_scene, get_workflow, get_artifact, prepare_generation, export_project)}
+def reserve_flow_attempt(project_id: str, scene_id: str, task_id: str, token: str, selected_model: str, credit_cost: float) -> dict:
+    """Reserve one approved browser-generation allowance; never clicks Flow or calls an API."""
+    return database().reserve_flow_attempt(project_id, scene_id, task_id, token, selected_model, credit_cost)
+
+
+def record_flow_result(attempt_id: str, task_id: str, token: str, status: str, evidence: str, project_url: str = "") -> dict:
+    """Log an observed browser result. Uncertain submissions remain unresolved without a retry."""
+    return database().record_flow_result(attempt_id, task_id, token, status, evidence, project_url)
+
+
+def extract_sprites(project_id: str, scene_id: str, source_version_id: str, settings: dict, task_id: str, token: str) -> dict:
+    """Pack an approved downloaded clip locally and register transparent sheet/atlas/preview/QC."""
+    return database().pack_sprite_artifact(project_id, scene_id, source_version_id, settings, task_id, token)
+
+
+TOOLS = {fn.__name__: fn for fn in (list_projects, get_project, get_next_action, claim_task, heartbeat, register_artifact, validate_artifact, submit_for_review, finish_task, save_scene, get_workflow, list_workflows, get_artifact, prepare_generation, export_project, reserve_flow_attempt, record_flow_result, extract_sprites)}
