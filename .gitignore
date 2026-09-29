@@ -1,0 +1,13 @@
+__pycache__/
+outputs/
+.env
+.env.*
+!.env.example
+.venv/
+node_modules/
+dist/
+studio-data/
+.archify/
+/request.json
+*.log
+*.tsbuildinfo

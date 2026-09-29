@@ -1,0 +1,13 @@
+{
+  "name": "AI Movie Workflow",
+  "video_model": "wan3.0-video",
+  "video_provider": "Alibaba Cloud Model Studio",
+  "review_sequence_seconds": 15,
+  "generation_job_seconds_with_matching_previs": 15,
+  "fps": 30,
+  "scratch_audio_engine": "Windows System.Speech",
+  "creative_stage": "premise_pending",
+  "approvals": [],
+  "api_submission_enabled": false,
+  "notes": "Infrastructure and a technical timing demo only. No story, artwork, voice casting, storyboard or video approved."
+}

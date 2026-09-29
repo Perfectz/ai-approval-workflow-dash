@@ -1,0 +1,4 @@
+interface:
+  display_name: "Director Studio"
+  short_description: "Coordinate approved film stages and artifact handoffs"
+  default_prompt: "Use $director-studio to inspect my film project, find the next permitted step, and prepare a versioned artifact for review."

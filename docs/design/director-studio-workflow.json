@@ -1,0 +1,415 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "AI Director Studio | From idea to finished film",
+    "output": ".archify/director-studio-workflow.html",
+    "animation": "none",
+    "quality_profile": "showcase",
+    "legend": {
+      "entries": {
+        "external": {
+          "label": "Director + brief"
+        },
+        "backend": {
+          "label": "Agent creates artifact"
+        },
+        "security": {
+          "label": "Human approval / control"
+        },
+        "cloud": {
+          "label": "Wan provider execution"
+        },
+        "database": {
+          "label": "Shared record / rule"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "develop",
+      "label": "A / Story"
+    },
+    {
+      "id": "previs",
+      "label": "B / Previs"
+    },
+    {
+      "id": "finish",
+      "label": "C / Film"
+    },
+    {
+      "id": "rules",
+      "label": "Controls",
+      "variant": "exception"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "brief",
+      "lane": "develop",
+      "col": 0,
+      "type": "external",
+      "label": "01 / Project brief",
+      "sublabel": "Audience, style, runtime, budget",
+      "tag": "Director sets creative constraints",
+      "width": 216,
+      "height": 84,
+      "icon": "flag"
+    },
+    {
+      "id": "premise",
+      "lane": "develop",
+      "col": 2,
+      "type": "backend",
+      "label": "02 / Premise & ideas",
+      "sublabel": "Hook, cast, conflict and ending",
+      "tag": "DIRECTOR: approve selected idea",
+      "width": 216,
+      "height": 84
+    },
+    {
+      "id": "comic",
+      "lane": "develop",
+      "col": 4,
+      "type": "backend",
+      "label": "03 / 10-page comic",
+      "sublabel": "Test the story, look and characters",
+      "tag": "DIRECTOR: approve visual direction",
+      "width": 216,
+      "height": 84
+    },
+    {
+      "id": "script",
+      "lane": "develop",
+      "col": 5,
+      "type": "backend",
+      "label": "04 / Full screenplay",
+      "sublabel": "Dialogue, shots and 2-15s packages",
+      "tag": "DIRECTOR: approve script + plan",
+      "width": 216,
+      "height": 84
+    },
+    {
+      "id": "audio",
+      "lane": "previs",
+      "col": 0,
+      "type": "backend",
+      "label": "05 / Scratch audio & timing",
+      "sublabel": "Render voices, stems, mix and cues",
+      "tag": "Measure actual audio; director approves",
+      "width": 216,
+      "height": 84,
+      "icon": "clock"
+    },
+    {
+      "id": "boards",
+      "lane": "previs",
+      "col": 2,
+      "type": "backend",
+      "label": "06 / Boards & references",
+      "sublabel": "Labeled cast, action, props + prompts",
+      "tag": "DIRECTOR: approve boards + prompt",
+      "width": 216,
+      "height": 84
+    },
+    {
+      "id": "blender",
+      "lane": "previs",
+      "col": 4,
+      "type": "backend",
+      "label": "07 / Blender previs",
+      "sublabel": "Color-coded dummies; cameras; motion",
+      "tag": "DIRECTOR: approve framing + blocking",
+      "width": 216,
+      "height": 84
+    },
+    {
+      "id": "package",
+      "lane": "previs",
+      "col": 5,
+      "type": "database",
+      "label": "08 / Pin generation package",
+      "sublabel": "Exact prompt + refs + audio + previs",
+      "tag": "Validate inputs and provider support",
+      "width": 216,
+      "height": 84
+    },
+    {
+      "id": "spend",
+      "lane": "finish",
+      "col": 0,
+      "type": "security",
+      "label": "09 / Approve paid request",
+      "sublabel": "Exact package, budget, attempt limit",
+      "tag": "DIRECTOR approval required to submit",
+      "width": 216,
+      "height": 84
+    },
+    {
+      "id": "wan",
+      "lane": "finish",
+      "col": 2,
+      "type": "cloud",
+      "label": "10 / Wan video generation",
+      "sublabel": "Alibaba Cloud Model Studio",
+      "tag": "Test shot first; then approved batches",
+      "width": 216,
+      "height": 84
+    },
+    {
+      "id": "takes",
+      "lane": "finish",
+      "col": 4,
+      "type": "security",
+      "label": "11 / Review scene takes",
+      "sublabel": "Identity, action, timing, continuity",
+      "tag": "DIRECTOR: accept take or request revision",
+      "width": 216,
+      "height": 84
+    },
+    {
+      "id": "edit",
+      "lane": "finish",
+      "col": 5,
+      "type": "backend",
+      "label": "12 / Edit & deliver film",
+      "sublabel": "Final audio, cuts, captions and credits",
+      "tag": "Approve final cut; export MP4 + archive",
+      "width": 216,
+      "height": 84,
+      "icon": "success"
+    },
+    {
+      "id": "dashboard",
+      "lane": "rules",
+      "col": 0,
+      "type": "database",
+      "label": "One project record",
+      "sublabel": "Preview + prompt + references together",
+      "tag": "Artifact versions, reviews, costs, takes",
+      "width": 216,
+      "height": 84
+    },
+    {
+      "id": "handoff",
+      "lane": "rules",
+      "col": 2,
+      "type": "database",
+      "label": "Agent handoff contract",
+      "sublabel": "Claim lease; read pinned approved inputs",
+      "tag": "Create version; check; submit for review",
+      "width": 216,
+      "height": 84
+    },
+    {
+      "id": "revise",
+      "lane": "rules",
+      "col": 4,
+      "type": "security",
+      "label": "If any review requests changes",
+      "sublabel": "Revise affected stage; keep old versions",
+      "tag": "Flag dependent work stale; reapprove",
+      "width": 216,
+      "height": 84
+    },
+    {
+      "id": "control",
+      "lane": "rules",
+      "col": 5,
+      "type": "security",
+      "label": "No silent approval or retries",
+      "sublabel": "Technical pass is not creative approval",
+      "tag": "Paid retries require remaining allowance",
+      "width": 216,
+      "height": 84
+    }
+  ],
+  "edges": [
+    {
+      "id": "brief-premise",
+      "from": "brief",
+      "to": "premise",
+      "label": "brief set",
+      "role": "main",
+      "variant": "emphasis"
+    },
+    {
+      "id": "premise-comic",
+      "from": "premise",
+      "to": "comic",
+      "label": "approved",
+      "role": "main",
+      "variant": "emphasis"
+    },
+    {
+      "id": "comic-script",
+      "from": "comic",
+      "to": "script",
+      "label": "approved",
+      "role": "main",
+      "variant": "emphasis"
+    },
+    {
+      "id": "script-audio",
+      "from": "script",
+      "to": "audio",
+      "label": "script approved",
+      "role": "main",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "audio-boards",
+      "from": "audio",
+      "to": "boards",
+      "label": "timing OK",
+      "role": "main",
+      "variant": "emphasis"
+    },
+    {
+      "id": "boards-blender",
+      "from": "boards",
+      "to": "blender",
+      "label": "approved",
+      "role": "main",
+      "variant": "emphasis"
+    },
+    {
+      "id": "blender-package",
+      "from": "blender",
+      "to": "package",
+      "label": "approved",
+      "role": "main",
+      "variant": "emphasis"
+    },
+    {
+      "id": "package-spend",
+      "from": "package",
+      "to": "spend",
+      "label": "ready for approval",
+      "role": "main",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "spend-wan",
+      "from": "spend",
+      "to": "wan",
+      "label": "authorized",
+      "role": "main",
+      "variant": "security"
+    },
+    {
+      "id": "wan-takes",
+      "from": "wan",
+      "to": "takes",
+      "label": "take saved",
+      "role": "main",
+      "variant": "emphasis"
+    },
+    {
+      "id": "takes-edit",
+      "from": "takes",
+      "to": "edit",
+      "label": "accepted",
+      "role": "main",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Timing and grounding",
+      "items": [
+        "Read stages 01-12 in order. Target 15s; packages are 2-15 whole seconds at 30 fps. Scenes may span packages.",
+        "Measure rendered audio. Preserve overruns; revise timing before slicing.",
+        "Pair clean input images with labeled boards and stable character IDs."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Generation and delivery",
+      "items": [
+        "Submit once, save the provider task ID, then poll that same task.",
+        "Record exact requests, settings, reference versions, takes and cost.",
+        "Deliver video, captions, audio stems, prompts and the decision archive."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Available in the local studio",
+      "items": [
+        "Project records, artifact versions, reviews and prompt/media views.",
+        "Scratch-audio timing, rough cuts and shared agent CLI/MCP tools.",
+        "Validated Wan package export; external creation tools provide assets."
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Production integrations still to connect",
+      "items": [
+        "Automatic Blender scene creation and rendering.",
+        "Reference hosting and paid Wan API execution.",
+        "Final mastered-film rendering. This diagram describes the target flow."
+      ]
+    }
+  ],
+  "semanticChecks": {
+    "requiredPaths": [
+      {
+        "from": "brief",
+        "to": "edit"
+      }
+    ],
+    "requiredEdges": [
+      {
+        "from": "brief",
+        "to": "premise"
+      },
+      {
+        "from": "premise",
+        "to": "comic"
+      },
+      {
+        "from": "comic",
+        "to": "script"
+      },
+      {
+        "from": "script",
+        "to": "audio"
+      },
+      {
+        "from": "audio",
+        "to": "boards"
+      },
+      {
+        "from": "boards",
+        "to": "blender"
+      },
+      {
+        "from": "blender",
+        "to": "package"
+      },
+      {
+        "from": "package",
+        "to": "spend"
+      },
+      {
+        "from": "spend",
+        "to": "wan"
+      },
+      {
+        "from": "wan",
+        "to": "takes"
+      },
+      {
+        "from": "takes",
+        "to": "edit"
+      }
+    ]
+  }
+}

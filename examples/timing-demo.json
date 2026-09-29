@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "sequence_id": "TIMING_DEMO",
+  "title": "Temporary voice and timing check",
+  "revision": "demo-v1",
+  "technical_demo": true,
+  "target_duration": 15,
+  "fps": 30,
+  "characters": {
+    "CHAR_A": {"name": "Voice A", "color": "#64b5ff", "voice": "Microsoft David Desktop", "rate": 0},
+    "CHAR_B": {"name": "Voice B", "color": "#ffbe76", "voice": "Microsoft Zira Desktop", "rate": 0}
+  },
+  "shots": [
+    {"id": "SHOT_01", "start": 0, "end": 7, "camera": "Wide framing; establish both dummy positions."},
+    {"id": "SHOT_02", "start": 7, "end": 15, "camera": "Medium framing on Voice B's dummy; hold the ending."}
+  ],
+  "jobs": [
+    {"id": "JOB_01", "start": 0, "end": 15}
+  ],
+  "lines": [
+    {"id": "LINE_01", "character": "CHAR_A", "start": 1, "slot_end": 6, "text": "This is voice A. Leave room for a response."},
+    {"id": "LINE_02", "character": "CHAR_B", "start": 8, "slot_end": 14, "text": "This is voice B. Hold the last frame before the cut."}
+  ],
+  "actions": [
+    {"start": 0, "end": 1, "label": "Opening breath / establish frame"},
+    {"start": 6, "end": 8, "label": "Silent reaction and camera cut"},
+    {"start": 14, "end": 15, "label": "Ending hold"}
+  ]
+}
